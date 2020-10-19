@@ -54,14 +54,13 @@ email address or ORCID}
 %component, formatting, style, styling, insert
 %\end{IEEEkeywords}
 
-\section{Application Domain (81)}
+\section{Application Domain (66)}
 One of the limitations of the resolution of magnetic resonance (MR) imaging is
 acquisition time. Acquisition time has to be limited in order for MR imaging
 remain convenient for patients. To increase resolution without increasing
 acquisition time, one could try one of several super-resolution (SR) techniques.
 A more recent technique to reach super-resolution is deep learning. The reviewed
-paper demonstrates two super resolution networks. 1) A one-level non-progressive
-neural network and 2) two-level progressive neural network.
+paper demonstrates two super resolution networks.
 
 \section{Methods (295)}
 %Given the high resolution (HR) image $I_{\text{HR}}$ a mapping $f$ can be found
@@ -78,12 +77,16 @@ To train the neural networks they have to be fed low resolution (LR) images. The
 (HR) images in Fourier space. By doing so in Fourier space, the image size is
 unchanged but the image quality is degraded.
 
-The first of the two networks is the one-level non-progressive neural network.
-This network is a general adversarial network (GAN), thus it consists of a
-generator and a discriminator. The generator consists of an encoder which has
-eight sequential convolutional layers, each of which is followed by a rectified
-linear unit (ReLu). The generator also consists of a reference feature
-extraction network.
+To reach SR, two networks are trained. Both networks are a general adversarial
+network (GAN), thus they consist of a generator and a discriminator. The
+generator trains the SR, whereas the discriminator trains to qualify images as
+real or fake. The difference between the two networks lays in the generator. In
+the first network, the generator consists of an encoder, a decoder and a feature
+extraction network that is applied to other MR sequences. The features extracted
+from the other MR sequences are then fed into the network between the encoder
+and the decoder. The second network, applies the encoder-decoder system two
+times. In the second network the features from the other MR sequences are also
+fed into the network twice, once in each encoder-decoder system.
 
 In the reviewed paper, four loss functions are used:
 \begin{enumerate}
@@ -100,19 +103,15 @@ In the reviewed paper, four loss functions are used:
     statistically matching extracted features.
 \end{enumerate}
 
-Section 5 is about the two-level progressive network. The proposed network
-sequentially up-samples the image in small steps, resulting in a large
-up-sampling factor.
-
 The image quality evaluation metrics that are used in this paper are structural
 similarity, peak signal-to-noise ratio and information fidelity criterion.
 
 \section{Discussion (179)}
-One common problem in training a Generative Adversarial Network is that it is
-highly unstable. This is inherently the case since often the generator and the
-discriminator are trained simultaneously while competing against each other. In
-the aforementioned paper the discriminator was trained four times before the
-generator was trained once. This might help stabilize the model.
+One common problem in training a GAN is that it is highly unstable. This is
+inherently the case since often the generator and the discriminator are trained
+simultaneously while competing against each other. In the aforementioned paper
+the discriminator was trained four times before the generator was trained once.
+This might help stabilize the model.
 
 Another strong point of the methodology is the use of multiple loss functions.
 Each loss function has its own (dis)advantages. By using the four loss

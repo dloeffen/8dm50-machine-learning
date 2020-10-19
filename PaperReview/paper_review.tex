@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
+%\IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -11,37 +11,38 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Paper Review 8DM50}
+\title{Paper Review 8DM50 \\ Multi-Contrast Super-Resolution MRI Through a
+  Progressive Network \cite{b1} }
 
 \author{\IEEEauthorblockN{Sander Derwig}
 \IEEEauthorblockA{\textit{Computational Biology} \\
-\textit{Eindhoven Technical University}\\
+\textit{Eindhoven University of Technology}\\
 s0901783 \\
 s.derwig@student.tue.nl}
 \and
 \IEEEauthorblockN{Manon van Erp}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\textit{IMAG/e} \\
+\textit{Eindhoven University of Technology}\\
+s0943658 \\
+m.v.erp@student.tue.nl}
 \and
 \IEEEauthorblockN{Rutger Hendrix}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\textit{IMAG/e} \\
+\textit{Eindhoven University of Technology}\\
+s0902650 \\
+r.hendrix@student.tue.nl}
 \and
 \IEEEauthorblockN{Dirk Loeffen}
 \IEEEauthorblockA{\textit{IMAG/e} \\
-\textit{Eindhoven Technical University} \\
+\textit{Eindhoven University of Technology} \\
 s1252399 \\
 d.w.m.loeffen@student.tue.nl}
 \and
 \IEEEauthorblockN{Djennifer Madzia-Madzou}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\textit{Image Sciences Institute} \\
+\textit{Utrecht University}\\
+s1526960 \\
+d.madziamazou@student.tue.nl}
 }
 
 \maketitle
@@ -54,24 +55,16 @@ email address or ORCID}
 %component, formatting, style, styling, insert
 %\end{IEEEkeywords}
 
-\section{Application Domain (66)}
+\section{Application Domain}
 One of the limitations of the resolution of magnetic resonance (MR) imaging is
 acquisition time. Acquisition time has to be limited in order for MR imaging
 remain convenient for patients. To increase resolution without increasing
 acquisition time, one could try one of several super-resolution (SR) techniques.
 A more recent technique to reach super-resolution is deep learning. The reviewed
-paper demonstrates two super resolution networks.
+paper demonstrates two super resolution networks. 1) A one-level non-progressive
+neural network and 2) two-level progressive neural network.
 
-\section{Methods (295)}
-%Given the high resolution (HR) image $I_{\text{HR}}$ a mapping $f$ can be found
-%such that the low resolution (LR) image $I_{\text{LR}}$ is obtained as in
-%Eq.~\ref{eq:mapping}.
-%\begin{equation}
-%I_{\text{LR}} = f\left( I_{\text{HR}} \right) =
-%\varphi\left(I_{\text{HR}}\right) + \epsilon
-%\label{eq:mapping}
-%\end{equation}
-%In this equation, $\varphi$ is a down-sampling function and $\epsilon$ is the system noise.
+\section{Methods}
 To train the neural networks they have to be fed low resolution (LR) images. The
 (LR) images are acquired by down-sampling and zero-filling the high resolution
 (HR) images in Fourier space. By doing so in Fourier space, the image size is
@@ -88,68 +81,71 @@ and the decoder. The second network, applies the encoder-decoder system two
 times. In the second network the features from the other MR sequences are also
 fed into the network twice, once in each encoder-decoder system.
 
-In the reviewed paper, four loss functions are used:
+In the reviewed paper the following four loss functions are used:
+
 \begin{enumerate}
-    \item The adversarial loss in the generative adversarial network framework is
-    used to train the generator.
-    \item The Mean-Squared Error evaluates the difference between the output of the
-    generator and the corresponding ground truth at pixel-wise level. It can
-    greatly improve the signal-to-noise ratio of generated images.
-    \item The perceptual loss overcomes the problem that some details may be lost
-    due to over-smoothed SR results. The perceptual loss recovers more details
-    by measuring image similarity in a high-level feature space.
+    \item The adversarial loss in the generative adversarial network framework is used to train the generator.
+    \item The Mean-Squared Error evaluates the difference between the output of
+      the generator and the corresponding ground truth at pixel-wise level. It
+      can greatly improve the signal-to-noise ratio of generated images.
+    \item The perceptual loss overcomes the problem that some details may be
+      lost due to over-smoothed SR results. The perceptual loss recovers more
+      details by measuring image similarity in a high-level feature space.
     \item The texture matching loss contributes to generate an image with great
-    similarity between the output of the generator and the ground truth by
-    statistically matching extracted features.
+      similarity between the output of the generator and the ground truth by
+      statistically matching extracted features.
 \end{enumerate}
 
 The image quality evaluation metrics that are used in this paper are structural
-similarity, peak signal-to-noise ratio and information fidelity criterion.
+similarity (SSIM), peak signal-to-noise ratio (PSNR) and information fidelity
+criterion (IFC). The SSIM is a fidelity metric which compares the terms of
+luminance, contrast and structural similarity. The second fidelity measure PSNR
+relates to the MSE and can be expressed as the ratio between the square of the
+maximum value and the MSE value. IFC measures image quality based on natural
+scene statistics. IFC utilizes the mutual information between the reference and
+a distorted image to evaluate image quality.
 
-\section{Discussion (179)}
-One common problem in training a GAN is that it is highly unstable. This is
-inherently the case since often the generator and the discriminator are trained
-simultaneously while competing against each other. In the aforementioned paper
-the discriminator was trained four times before the generator was trained once.
-This might help stabilize the model.
+\section{Discussion and Recommendations}
+One common problem in training a GAN is that it is
+highly unstable. This is inherently the case since often the generator and the
+discriminator are trained simultaneously while competing against each other. In
+the aforementioned paper the discriminator was trained four times before the
+generator was trained once. This might help stabilize the model.
 
-Another strong point of the methodology is the use of multiple loss functions.
-Each loss function has its own (dis)advantages. By using the four loss
-functions, the power of each one is combined and results in a generally better
-applicable loss function for this application.
-
-Using peak signal-to-noise ratio as a metric is sometimes problematic, since a
-higher PSNR usually indicates a reconstruction of higher quality, but this is
-not guaranteed. PSNR is also proven to be outperformed by most other popular
-evaluation metrics, so the use of PSNR does not seem necessary in this paper.
-But on the other hand it is beneficial to use multiple evaluation metrics to
-ensure that the model is working optimally and correctly.
-
-\section{Recommendations (216)}
-Although MSE leads to a high signal-to-noise ratio in reference to the ground
-truth, it tends to produce over-smoothed SR results. Therefore they also use
-perceptual loss. Is there a way to combine these two to avoid one problem being
-created that has to be solved with another loss function.
+Another strong point of the methodology is the use of multiple loss functions
+and regularization factors. Each loss function has its own (dis)advantages. By
+using the four loss functions, the power of each one is combined and results in
+a generally better applicable loss function for this application.
 
 Also two distorted images with the same MSE may have very different types of
 errors, some of which are much more visible than others. One error might be
 preferred over the other, which is now not addressed with the use of MSE.
 
-PSNR is no longer regarded as a reliable indicator of image quality degradation
-[1]. Although a higher PSNR generally indicates that the reconstruction is of
-higher quality, in some cases it may not. Bear in mind that none of these
-objective measures are particularly good at predicting human visual response to
-image quality. Sometimes PSNRs vary wildly between two almost indistinguishable
-images. SSIM is recommended. So since this is already used we propose just
-skipping PSNR.
+The perceptual loss part in the objective function measures image similarity in
+a high-level feature space. The pretrained VGG16 model on ImageNet is used to
+extract features from a given image. However these images are normal images of
+for example cars and so are not biomedical images. In our opinion extracting
+features and training a model on biomedical images would be more reliable.
+\newpage
+PSNR is no longer regarded as a reliable indicator of image quality degradation,
+and so is a weak point \cite{b2}. Although a higher PSNR generally indicates that the
+reconstruction is of higher quality, in some cases it may not. Bear in mind that
+none of these objective measures are particularly good at predicting human
+visual response to image quality. Sometimes PSNRs vary wildly between two almost
+indistinguishable images. SSIM is recommended. So since this is already used we
+propose just skipping PSNR.
 
 The Cognitive Interaction Problem. It is widely known that cognitive
 understanding and interactive visual processing (e.g., eye movements) influence
 the perceived quality of images. For example, a human observer will give
-different quality scores to the same image if given different instructions~\cite{b1}.
+different quality scores to the same image if given different instructions
+\cite{b2}.
 
 \begin{thebibliography}{00}
-\bibitem{b1} Wang, Z., Bovik, A. C., Sheikh, H. R., & Simoncelli, E. P. (2004).
+\bibitem{b1} Lyu, Q., Shan, H., Steber, C., Helis, C., Whitlow, C. T., Chan, M.,
+  & Wang, G. (2020). Multi-contrast super-resolution mri through a progressive
+  network. IEEE Transactions on Medical Imaging.
+\bibitem{b2} Wang, Z., Bovik, A. C., Sheikh, H. R., & Simoncelli, E. P. (2004).
   Image quality assessment: from error visibility to structural similarity. IEEE
   transactions on image processing, 13(4), 600-612.
 
